@@ -5,11 +5,10 @@ from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.fsm.storage.redis import RedisStorage
 from redis.asyncio.client import Redis
+from tgbot.handlers.start import start_router
+from tgbot.handlers.translate import translate_router
 
 from tgbot.config import load_config
-from tgbot.handlers.admin import admin_router
-from tgbot.handlers.echo import echo_router
-from tgbot.handlers.user import user_router
 from tgbot.middlewares.config import ConfigMiddleware
 from tgbot.services import broadcaster
 
@@ -43,9 +42,8 @@ async def main():
     dp = Dispatcher(storage=storage)
 
     for router in [
-        admin_router,
-        user_router,
-        echo_router
+        start_router,
+        translate_router
     ]:
         dp.include_router(router)
 
@@ -60,3 +58,6 @@ if __name__ == '__main__':
         asyncio.run(main())
     except (KeyboardInterrupt):
         logger.error("The bot has been stopped!")
+
+
+

@@ -17,14 +17,13 @@ marshmallow==3.19.0
 mccabe==0.7.0
 multidict==6.0.4
 packaging==23.0
-peewee==3.15.4
-peewee-migrations==0.3.32
-psycopg2-binary==2.9.5
+PyArabic==0.6.15
 pycodestyle==2.10.0
 pydantic==1.10.4
 pyflakes==3.0.1
 python-dotenv==0.21.1
 redis==4.4.2
+six==1.16.0
 tomli==2.0.1
-typing_extensions==4.4.0
+typing-extensions==4.4.0
 yarl==1.8.2

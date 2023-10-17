@@ -11,9 +11,7 @@ WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
-# install psycopg2 dependencies
-RUN apk update \
-    && apk add postgresql-dev gcc python3-dev musl-dev
+
 
 # # lint
 # RUN pip install --upgrade pip
@@ -60,5 +58,3 @@ RUN chown -R app:app $APP_HOME
 
 # change to the app user
 USER app
-
-CMD [ "python", "bot.py"]

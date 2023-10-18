@@ -54,6 +54,7 @@ def translate(text: str) -> str:
             translated_word = ""
             for index, letter in enumerate(list(word)):
                 translated_letter = ""
+                original_letter = letter
                 letter = letter.upper()
                 is_first = index == 0
                 is_last = (index + 1) == len(word)
@@ -182,7 +183,7 @@ def translate(text: str) -> str:
                 elif letter == "Ь" or letter == "Ъ":
                     translated_letter = ""
                 else:
-                    translated_letter = f"{letter}"
+                    translated_letter = original_letter
                 translated_word += translated_letter.strip()
             translated_line += f"{translated_word} "
         translated_text += f"{translated_line.strip()}\n"

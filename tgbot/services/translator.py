@@ -85,7 +85,7 @@ def translate(text: str) -> str:
                 elif letter == "Е":
                     if previous_letter in [
                         "а", "о", "у", "ә", "ө", "ү", "и", "ы"
-                        ] or is_first:
+                    ] or is_first:
                         translated_letter = "ي"
                     elif is_last:
                         translated_letter = "ی"
@@ -100,15 +100,15 @@ def translate(text: str) -> str:
                 elif letter == "Й":
                     translated_letter = "اي" if is_first else "ي"
                 elif letter == "К":
-                    if (next_letter in [
+                    is_letter_in_word1 = any(let in [
                         "а", "о", "у", "ы", "ъ"
-                    ]) or (previous_letter in [
-                            "а", "о", "у", "ы", "ъ"]):
-                        translated_letter = "ق"
-                    elif (next_letter in [
+                    ] for let in word)
+                    is_letter_in_word2 = any(let in [
                         "ә", "ө", "ү", "е", "и", "ь"
-                    ]) or (previous_letter in [
-                            "ә", "ө", "ү", "е", "и", "ь"]):
+                    ] for let in word)
+                    if is_letter_in_word1:
+                        translated_letter = "ق"
+                    elif is_letter_in_word2:
                         translated_letter = "ك"
                     elif previous_letter == "ю":
                         translated_letter = "یوق"
@@ -169,14 +169,14 @@ def translate(text: str) -> str:
                     translated_letter = "ا" if is_first else "ي"
                 elif letter == "Я":
                     is_letter_in_word1 = any(let in ["а", "у", "о", "ы"
-                                                    ] for let in word)
+                                                     ] for let in word)
                     is_letter_in_word2 = any(let in ["ә", "ү", "ө", "е", "и"
-                                                    ] for let in word)
+                                                     ] for let in word)
                     if (is_first and is_letter_in_word1
-                        ) or previous_letter.upper() == "Ъ":
+                            ) or previous_letter.upper() == "Ъ":
                         translated_letter = "یا"
                     elif (is_first and is_letter_in_word2
-                        ) or previous_letter.upper() == "Ь":
+                          ) or previous_letter.upper() == "Ь":
                         translated_letter = "یە"
                 elif letter == "М":
                     translated_letter = "م"
@@ -194,7 +194,7 @@ def translate(text: str) -> str:
         "ﺭ": "ر",
         "چی": "چی",
         "س": "س",
-        
+
         # Добавьте другие замены по мере необходимости
     }
 
@@ -208,6 +208,3 @@ def translate(text: str) -> str:
     translated_text = araby.normalize_ligature(text_stripped)
 
     return translated_text
-
-
-

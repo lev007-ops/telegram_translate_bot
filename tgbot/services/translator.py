@@ -111,8 +111,11 @@ def translate(text: str) -> str:
                         translated_letter = "ك"
                     elif previous_letter == "ю":
                         translated_letter = "یوق"
-                elif letter == "Ю" and next_letter.upper() != "К":
-                    translated_letter = "یو"
+                elif letter == "Ю":
+                    if next_letter.upper() != "К":
+                        translated_letter = "یو"
+                    else:
+                        translated_letter = ""
                 elif letter == "Л":
                     translated_letter = "ل"
                 elif letter == "Н":

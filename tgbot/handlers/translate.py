@@ -27,5 +27,6 @@ async def user_start(message: Message):
         if not text:
             await message.answer(error_text)
             return
-    text = translate(text)
-    await message.answer(text)
+        await message.answer(text)
+    arab_text = translate(text)
+    await message.answer(arab_text)

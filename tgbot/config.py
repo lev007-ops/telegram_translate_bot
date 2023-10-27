@@ -12,7 +12,8 @@ class TgBot:
 
 @dataclass
 class Miscellaneous:
-    other_params = None
+    iam_token: str
+    folder_id: str
 
 
 @dataclass
@@ -31,5 +32,8 @@ def load_config(path: str = None):
             admin_ids=list(map(int, env.list("ADMINS"))),
             use_redis=env.bool("USE_REDIS")
         ),
-        misc=Miscellaneous()
+        misc=Miscellaneous(
+            iam_token=env.str("IAM_TOKEN"),
+            folder_id=env.str("FOLDER_ID")
+        )
     )

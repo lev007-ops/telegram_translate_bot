@@ -23,7 +23,7 @@ async def ya_detect(text: str):
         "Authorization": f"Bearer {iam_token}"
     }
 
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(headers=headers) as session:
         async with session.post(endpoint, json=body, headers=headers
                                 ) as response:
             if response.status != 200:

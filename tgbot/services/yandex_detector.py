@@ -25,5 +25,6 @@ async def ya_detect(text: str, iam_token: str):
     async with aiohttp.ClientSession() as session:
         async with session.post(endpoint, headers=headers, json=body) as response:
             if response.status == 200:
-                return await response.json()["languageCode"]
+                result = await response.json()
+                return result["languageCode"]
             print(f"Error {response.status}: {await response.text()}")

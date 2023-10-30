@@ -5,9 +5,8 @@ target_language = 'tt'
 endpoint = "https://translate.api.cloud.yandex.net/translate/v2/detect"
 
 
-async def ya_detect(text: str):
+async def ya_detect(text: str, iam_token: str):
     config = load_config()
-    iam_token = config.misc.iam_token
     folder_id = config.misc.folder_id
 
     body = {
@@ -23,11 +22,8 @@ async def ya_detect(text: str):
         "Authorization": f"Bearer {iam_token}"
     }
 
-    async with aiohttp.ClientSession(headers=headers) as session:
-        async with session.post(endpoint, json=body, headers=headers
-                                ) as response:
-            if response.status != 200:
-                return False
-            response_json = await response.json()
-            return response_json["languageCode"]
-            
+    async with aiohttp.ClientSession() as session:
+        async with session.post(endpoint, headers=headers, json=body) as response:
+            if response.status == 200:
+                return await response.json()["languageCode"]
+            print(f"Error {response.status}: {await response.text()}")

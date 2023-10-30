@@ -5,6 +5,7 @@ from aiogram.types import Message
 from tgbot.services.translator import translate
 from tgbot.services.yandex_translate import ya_translate
 from tgbot.services.yandex_detector import ya_detect
+from tgbot.services.get_ya_token import get_iam_token
 
 translate_router = Router()
 
@@ -16,16 +17,23 @@ async def user_start(message: Message):
         "Синең текстыңны кабул иттем, тиздән тәрҗемә җибәрәчәкмен:"
     )
     text = message.text
-    lang = await ya_detect(text)
-    error_text = ("Ошибка перевода, попробуйте в другой раз\n\n"
-                  "Тәрҗемә хатасы, бүтән тапкыр карагыз")
+    error_text = (
+        "Ошибка перевода, попробуйте в другой раз\n\n--\n\n"
+        "Тәрҗемә хатасы, бүтән тапкыр карагыз\n\n"
+        "Error code: ")
+    iam_token = await get_iam_token()
+    if not iam_token:
+        await message.answer(f"{error_text} where is my damn token")
+    lang = await ya_detect(text, iam_token)
+
     if not lang:
-        await message.answer(error_text)
+        await message.answer(f"{error_text} dude, just tell me the language")
         return
     if lang == "ru":
-        text = await ya_translate("ru", message.text)
+        text = await ya_translate("ru", message.text,
+                                  iam_token)
         if not text:
-            await message.answer(error_text)
+            await message.answer(f"{error_text} give me that darn translation")
             return
         await message.answer(text)
     arab_text = translate(text)

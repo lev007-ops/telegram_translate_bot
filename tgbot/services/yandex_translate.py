@@ -5,9 +5,9 @@ target_language = 'tt'
 endpoint = "https://translate.api.cloud.yandex.net/translate/v2/translate"
 
 
-async def ya_translate(source_language: str, text: str):
+async def ya_translate(source_language: str, text: str,
+                       iam_token: str):
     config = load_config()
-    iam_token = config.misc.iam_token
     folder_id = config.misc.folder_id
 
     body = {
@@ -26,7 +26,6 @@ async def ya_translate(source_language: str, text: str):
         async with session.post(endpoint, json=body, headers=headers
                                 ) as response:
             if response.status != 200:
-                return False
+                return
             response_json = await response.json()
             return response_json["translations"][0]["text"]
-            

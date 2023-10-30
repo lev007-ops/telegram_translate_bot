@@ -12,7 +12,7 @@ class TgBot:
 
 @dataclass
 class Miscellaneous:
-    iam_token: str
+    oauth_token: str
     folder_id: str
 
 
@@ -33,7 +33,7 @@ def load_config(path: str = None):
             use_redis=env.bool("USE_REDIS")
         ),
         misc=Miscellaneous(
-            iam_token=env.str("IAM_TOKEN"),
+            oauth_token=env.str("OAUTH_TOKEN"),
             folder_id=env.str("FOLDER_ID")
         )
     )

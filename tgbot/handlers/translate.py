@@ -29,8 +29,8 @@ async def user_start(message: Message):
     if not lang:
         await message.answer(f"{error_text} dude, just tell me the language")
         return
-    if lang == "ru":
-        text = await ya_translate("ru", message.text,
+    if lang in ("ru", "en"):
+        text = await ya_translate(lang, message.text,
                                   iam_token)
         if not text:
             await message.answer(f"{error_text} give me that darn translation")

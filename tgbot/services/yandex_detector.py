@@ -12,7 +12,7 @@ async def ya_detect(text: str, iam_token: str):
     body = {
         "text": text,
         "languageCodeHints": [
-            "ru", "tt"
+            "ru", "tt", "en"
         ],
         "folderId": folder_id
     }

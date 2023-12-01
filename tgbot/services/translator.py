@@ -1,9 +1,23 @@
 # -*- coding: utf-8 -*-
 import pyarabic.araby as araby
-import re
+import json
+
+
+def load_dict(path: str = "words_dict.json") -> dict:
+    with open(path, "r", encoding="UTF-8") as file:
+        words_dict = json.load(file)
+    return words_dict["words"]
+
+
+def load_endings_dict(path: str = "endings_dict.json") -> dict:
+    with open(path, "r", encoding="UTF-8") as file:
+        endings_dict = json.load(file)
+    return endings_dict["endings"]
 
 
 def translate(text: str) -> str:
+    words_dict = load_dict()
+    endings_dict = load_endings_dict()
     for symbol in [".", ",", ";", "@", "$", "#"]:
         text = text.replace(symbol, f" {symbol}")
     lines = text.split('\n')  # Разделяем текст на строки
@@ -12,6 +26,16 @@ def translate(text: str) -> str:
         translated_line = ""
         words = line.split()
         for word in words:
+            if dict_word := words_dict.get(word.lower(), None):
+                translated_line += f"{dict_word} "
+                continue
+            for ending in endings_dict.keys():
+                if word.lower().endswith(ending):
+                    im_word = word.replace(ending, "")
+                    if dict_word := words_dict.get(im_word.lower(), None):
+                        translated_line += (f"{dict_word}"
+                                            f"{endings_dict[ending]} ")
+                        continue
             word = word.replace("ый", "ی")
             for let in ["да", "дә", "та", "тә"]:
                 if word.endswith(let):
@@ -113,10 +137,7 @@ def translate(text: str) -> str:
                     elif previous_letter == "ю":
                         translated_letter = "یوق"
                 elif letter == "Ю":
-                    if next_letter.upper() != "К":
-                        translated_letter = "یو"
-                    else:
-                        translated_letter = ""
+                    translated_letter = "يو"
                 elif letter == "Л":
                     translated_letter = "ل"
                 elif letter == "Н":
@@ -131,13 +152,6 @@ def translate(text: str) -> str:
                     translated_letter = "پ"
                 elif letter == "Р":
                     translated_letter = "ﺭ"
-                # elif letter == "С":
-                #     if (previous_letter in ["ә", "ү", "ө", "и", "ь"] or
-                #             next_letter in ["ә", "ү", "ө", "и", "ь"]):
-                #         translated_letter = "ﺱ"
-                #     elif (previous_letter in ["а", "у", "о", "ы", "ъ"] or
-                #             next_letter in c["а", "у", "о", "ы", "ъ"]):
-                #         translated_letter = "ص"
                 elif letter == "С":
                     translated_letter = "س"
                 elif letter == "Т":
@@ -168,19 +182,25 @@ def translate(text: str) -> str:
                 elif letter == "Э":
                     translated_letter = "ا" if is_first else "ي"
                 elif letter == "Я":
-                    is_letter_in_word1 = any(let in ["а", "у", "о", "ы"
-                                                     ] for let in word)
-                    is_letter_in_word2 = any(let in ["ә", "ү", "ө", "е", "и"
-                                                     ] for let in word)
-                    if (is_first and is_letter_in_word1
-                            ) or previous_letter.upper() == "Ъ":
+                    # is_letter_in_word1 = any(let in ["а", "у", "о", "ы"
+                    #                                  ] for let in word)
+                    # is_letter_in_word2 = any(let in ["ә", "ү", "ө", "е", "и"
+                    #                                  ] for let in word)
+                    # if (is_first and is_letter_in_word1
+                    #         ) or previous_letter.upper() == "Ъ":
+                    #     translated_letter = "یا"
+                    # elif (is_first and is_letter_in_word2
+                    #       ) or previous_letter.upper() == "Ь":
+                    #     translated_letter = "یە"
+                    if next_letter in ["о", "у", "а", "ы"] and is_first:
                         translated_letter = "یا"
-                    elif (is_first and is_letter_in_word2
-                          ) or previous_letter.upper() == "Ь":
-                        translated_letter = "یە"
+                    elif next_letter in ["и", "ө", "ү", "ә", "е"] and is_first:
+                        translated_letter = "یه"
+                    else:
+                        translated_letter = ""
                 elif letter == "М":
                     translated_letter = "م"
-                elif letter == "Ь" or letter == "Ъ":
+                elif letter in ["Ь", "Ъ"]:
                     translated_letter = ""
                 else:
                     translated_letter = original_letter

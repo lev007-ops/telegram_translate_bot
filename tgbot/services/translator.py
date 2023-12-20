@@ -18,8 +18,9 @@ def load_endings_dict(path: str = "endings_dict.json") -> dict:
 def translate(text: str) -> str:
     words_dict = load_dict()
     endings_dict = load_endings_dict()
-    for symbol in [".", ",", ";", "@", "$", "#"]:
+    for symbol in [".", ",", ";", "@", "$", "#", "/", "?", "!"]:
         text = text.replace(symbol, f" {symbol}")
+    text = text.replace("?", "؟")
     lines = text.split('\n')  # Разделяем текст на строки
     translated_text = ""
     for line in lines:
@@ -29,14 +30,19 @@ def translate(text: str) -> str:
             if dict_word := words_dict.get(word.lower(), None):
                 translated_line += f"{dict_word} "
                 continue
+            do_cont = True
             for ending in endings_dict.keys():
                 if word.lower().endswith(ending):
-                    im_word = word.replace(ending, "")
+                    im_word = word.lower().replace(ending, "")
                     if dict_word := words_dict.get(im_word.lower(), None):
                         translated_line += (f"{dict_word}"
                                             f"{endings_dict[ending]} ")
-                        continue
+                        do_cont = False
+                        break
+            if not do_cont:
+                continue
             word = word.replace("ый", "ی")
+            word = word.replace("ту", "تو")
             for let in ["да", "дә", "та", "тә"]:
                 if word.endswith(let):
                     word = word.replace(let, "ده")
@@ -122,7 +128,7 @@ def translate(text: str) -> str:
                 elif letter == "И":
                     translated_letter = "اي" if is_first else "ي"
                 elif letter == "Й":
-                    translated_letter = "اي" if is_first else "ي"
+                    translated_letter = "ي" if is_first else "ي"
                 elif letter == "К":
                     is_letter_in_word1 = any(let in [
                         "а", "о", "у", "ы", "ъ"
@@ -134,8 +140,6 @@ def translate(text: str) -> str:
                         translated_letter = "ق"
                     elif is_letter_in_word2:
                         translated_letter = "ك"
-                    elif previous_letter == "ю":
-                        translated_letter = "یوق"
                 elif letter == "Ю":
                     translated_letter = "يو"
                 elif letter == "Л":
@@ -182,20 +186,14 @@ def translate(text: str) -> str:
                 elif letter == "Э":
                     translated_letter = "ا" if is_first else "ي"
                 elif letter == "Я":
-                    # is_letter_in_word1 = any(let in ["а", "у", "о", "ы"
-                    #                                  ] for let in word)
-                    # is_letter_in_word2 = any(let in ["ә", "ү", "ө", "е", "и"
-                    #                                  ] for let in word)
-                    # if (is_first and is_letter_in_word1
-                    #         ) or previous_letter.upper() == "Ъ":
-                    #     translated_letter = "یا"
-                    # elif (is_first and is_letter_in_word2
-                    #       ) or previous_letter.upper() == "Ь":
-                    #     translated_letter = "یە"
-                    if next_letter in ["о", "у", "а", "ы"] and is_first:
-                        translated_letter = "یا"
-                    elif next_letter in ["и", "ө", "ү", "ә", "е"] and is_first:
-                        translated_letter = "یه"
+                    if previous_letter in ["о", "у", "а", "ы"]:
+                        translated_letter = "يا"
+                    elif previous_letter in ["и", "ө", "ү", "ә", "е"]:
+                        translated_letter = "يه"
+                    elif is_first and any(let in ["ө", "ү", "ә", "е"] for let in word):
+                        translated_letter = "يه"
+                    elif is_first and any(let in ["о", "у", "а", "ы"] for let in word):
+                        translated_letter = "يا"
                     else:
                         translated_letter = ""
                 elif letter == "М":

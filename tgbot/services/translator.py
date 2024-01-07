@@ -41,6 +41,7 @@ def translate(text: str) -> str:
                         break
             if not do_cont:
                 continue
+            original_word = word
             word = word.replace("ый", "ی")
             word = word.replace("ту", "تو")
             for let in ["да", "дә", "та", "тә"]:
@@ -132,10 +133,10 @@ def translate(text: str) -> str:
                 elif letter == "К":
                     is_letter_in_word1 = any(let in [
                         "а", "о", "у", "ы", "ъ"
-                    ] for let in word)
+                    ] for let in original_word)
                     is_letter_in_word2 = any(let in [
                         "ә", "ө", "ү", "е", "и", "ь"
-                    ] for let in word)
+                    ] for let in original_word)
                     if is_letter_in_word1:
                         translated_letter = "ق"
                     elif is_letter_in_word2:
@@ -190,9 +191,9 @@ def translate(text: str) -> str:
                         translated_letter = "يا"
                     elif previous_letter in ["и", "ө", "ү", "ә", "е"]:
                         translated_letter = "يه"
-                    elif is_first and any(let in ["ө", "ү", "ә", "е"] for let in word):
+                    elif is_first and any(let in ["ө", "ү", "ә", "е"] for let in original_word):
                         translated_letter = "يه"
-                    elif is_first and any(let in ["о", "у", "а", "ы"] for let in word):
+                    elif is_first and any(let in ["о", "у", "а", "ы"] for let in original_word):
                         translated_letter = "يا"
                     else:
                         translated_letter = ""

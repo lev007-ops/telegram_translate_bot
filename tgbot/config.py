@@ -14,6 +14,7 @@ class TgBot:
 class Miscellaneous:
     oauth_token: str
     folder_id: str
+    version: str
 
 
 @dataclass
@@ -34,6 +35,7 @@ def load_config(path: str = None):
         ),
         misc=Miscellaneous(
             oauth_token=env.str("OAUTH_TOKEN"),
-            folder_id=env.str("FOLDER_ID")
+            folder_id=env.str("FOLDER_ID"),
+            version="1.1.1"
         )
     )

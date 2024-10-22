@@ -10,11 +10,14 @@ from tgbot.handlers.translate import translate_router
 from tgbot.config import load_config
 from tgbot.middlewares.config import ConfigMiddleware
 from tgbot.services import broadcaster
+from tgbot.models.models import db, User
 
 logger = logging.getLogger(__name__)
 
 
 async def on_startup(bot: Bot, admin_ids: list[int]):
+    db.connect()
+    db.create_tables([User])
     await broadcaster.broadcast(bot, admin_ids, "The bot has been launched!")
 
 
@@ -52,7 +55,5 @@ if __name__ == '__main__':
     try:
         asyncio.run(main())
     except (KeyboardInterrupt):
+        db.close()
         logger.error("The bot has been stopped!")
-
-
-

@@ -18,9 +18,18 @@ class Miscellaneous:
 
 
 @dataclass
+class Postgres:
+    database: str
+    user: str
+    password: str
+    host: str
+
+
+@dataclass
 class Config:
     tg_bot: TgBot
     misc: Miscellaneous
+    db: Postgres
 
 
 def load_config(path: str = None):
@@ -37,5 +46,11 @@ def load_config(path: str = None):
             oauth_token=env.str("OAUTH_TOKEN"),
             folder_id=env.str("FOLDER_ID"),
             version="1.1.1"
+        ),
+        db=Postgres(
+            database=env.str("DB_NAME"),
+            user=env.str("DB_USER"),
+            password=env.str("DB_PASSWORD"),
+            host=env.str("DB_HOST")
         )
     )

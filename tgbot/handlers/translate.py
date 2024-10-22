@@ -6,6 +6,7 @@ from tgbot.services.translator import translate
 from tgbot.services.yandex_translate import ya_translate
 from tgbot.services.yandex_detector import ya_detect
 from tgbot.services.get_ya_token import get_iam_token
+from tgbot.models.models import create_user
 
 translate_router = Router()
 
@@ -38,3 +39,4 @@ async def user_start(message: Message):
         await message.answer(text)
     arab_text = translate(text)
     await message.answer(arab_text)
+    create_user(message.from_user.id)
